@@ -1,29 +1,19 @@
 package com.codingwithmitch.todolist;
-
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.codingwithmitch.todolist.models.Task;
-import com.codingwithmitch.todolist.util.DataSource;
-
-
-import java.util.List;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codingwithmitch.todolist.models.Task;
+import com.codingwithmitch.todolist.util.DataSource;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         text = findViewById(R.id.text);
-
 
 //        text.setText("doing stuff...");
 //        Observable.fromIterable(DataSource.createTasksList())
@@ -112,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
-
         Observable<Task> taskObservable = Observable
                 .fromIterable(DataSource.createTasksList())
                 .subscribeOn(Schedulers.io())
@@ -121,51 +109,57 @@ public class MainActivity extends AppCompatActivity {
         taskObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
-
+                Log.d(TAG, "onSubscribe: called.");
             }
 
             @Override
             public void onNext(Task task) {
-                Log.d(TAG, "onNext: : " + task.getDescription());
+                Log.d(TAG, "onNext: " + Thread.currentThread().getName());
+                Log.d(TAG, "onNext: " + task.getDescription());
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
 
             @Override
             public void onError(Throwable e) {
-
+                Log.e(TAG, "onError: ", e);
             }
 
             @Override
             public void onComplete() {
-
+                Log.d(TAG, "onComplete: called.");
             }
         });
 
 
-        Observable.range(0,3)
-                .repeat(2)
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Integer integer) {
-                        Log.d(TAG, "onNext: " + integer);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+//        Observable.range(0,3)
+//                .repeat(2)
+//                .observeOn(Schedulers.io())
+//                .subscribeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<Integer>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Integer integer) {
+//                        Log.d(TAG, "onNext: " + integer);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
     }
 
 
