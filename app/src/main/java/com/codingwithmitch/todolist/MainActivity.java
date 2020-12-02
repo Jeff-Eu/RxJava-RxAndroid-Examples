@@ -12,8 +12,10 @@ import com.codingwithmitch.todolist.util.DataSource;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -105,6 +107,20 @@ public class MainActivity extends AppCompatActivity {
 		Observable<Task> taskObservable = Observable
 				.fromIterable(DataSource.createTasksList())
 				.subscribeOn(Schedulers.io())
+				.filter(new Predicate<Task>() {
+					@Override
+					public boolean test(@NonNull Task task) throws Exception {
+						// This will work on background thread
+						Log.d(TAG, "onNext: " + Thread.currentThread().getName());
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						// filter the items which return true
+						return task.isComplete();
+					}
+				})
 				.observeOn(AndroidSchedulers.mainThread());
 
 		taskObservable.subscribe(new Observer<Task>() {
@@ -117,11 +133,6 @@ public class MainActivity extends AppCompatActivity {
 			public void onNext(Task task) {
 				Log.d(TAG, "onNext: " + Thread.currentThread().getName());
 				Log.d(TAG, "onNext: " + task.getDescription());
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
 			}
 
 			@Override
