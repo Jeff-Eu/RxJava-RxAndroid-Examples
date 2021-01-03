@@ -109,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
 				.subscribeOn(Schedulers.io())
 				.filter(new Predicate<Task>() {
 					@Override
-					public boolean test(@NonNull Task task) throws Exception {
+					public boolean test(@NonNull Task task) {
 						// This will work on background thread
-						Log.d(TAG, "onNext: " + Thread.currentThread().getName());
+						Log.d(TAG, "filter: Thread:" + Thread.currentThread().getName() + " task: " + task.getDescription());
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -131,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
 			@Override
 			public void onNext(Task task) {
-				Log.d(TAG, "onNext: " + Thread.currentThread().getName());
-				Log.d(TAG, "onNext: " + task.getDescription());
+				Log.d(TAG, "onNext: Thread: " + Thread.currentThread().getName() + " task: " + task.getDescription());
 			}
 
 			@Override
